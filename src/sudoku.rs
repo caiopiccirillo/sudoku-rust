@@ -29,43 +29,22 @@ impl Sudoku {
 
 impl Debug for Sudoku {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut result: std::fmt::Result = Ok(());
-        match write!(f, "  ") {
-            Ok(v) => result = Ok(v),
-            Err(e) => return Err(e),
-        }
+        let result: std::fmt::Result = Ok(());
+        write!(f, "  ")?;
         for c in self.cols.iter() {
-            match write!(f, "|{}", c) {
-                Ok(v) => result = Ok(v),
-                Err(e) => return Err(e),
-            }
+            write!(f, "|{}", c)?;
         }
-        match writeln!(f, "|  ") {
-            Ok(v) => result = Ok(v),
-            Err(e) => return Err(e),
-        }
+        writeln!(f, "|  ")?;
         for r in self.rows.iter() {
-            match write!(f, "|{}",r) {
-                Ok(v) => result = Ok(v),
-                Err(e) => return Err(e),
-            }
+            write!(f, "|{}",r)?;
             for c in self.cols.iter() {
                 // Add None value to create an empty board
                 match self.board.get(&format!("{}{}", r, c)).unwrap() {
-                    Some(value) => match write!(f, "|{}", value) {
-                        Ok(v) => result = Ok(v),
-                        Err(e) => return Err(e),
-                    },
-                    None => match write!(f, "|-") {
-                        Ok(v) => result = Ok(v),
-                        Err(e) => return Err(e),
-                    },
+                    Some(value) => write!(f, "|{}", value)?,
+                    None => write!(f, "|-")?
                 };
             }
-            match writeln!(f, "|  ") {
-                Ok(v) => result = Ok(v),
-                Err(e) => return Err(e),
-            }
+            writeln!(f, "|  ")?;
         }
         return result;
     }
