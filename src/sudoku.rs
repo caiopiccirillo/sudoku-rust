@@ -30,15 +30,19 @@ impl Sudoku {
 impl Debug for Sudoku {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let result: std::fmt::Result = Ok(());
+        writeln!(f, "  ")?;
         write!(f, "  ")?;
+        // Write each column name
         for c in self.cols.iter() {
             write!(f, "|{}", c)?;
         }
         writeln!(f, "|  ")?;
+        // Write the value of all elements in board
         for r in self.rows.iter() {
+            // Write each row name
             write!(f, "|{}",r)?;
             for c in self.cols.iter() {
-                // Add None value to create an empty board
+                // Get value stored in board
                 match self.board.get(&format!("{}{}", r, c)).unwrap() {
                     Some(value) => write!(f, "|{}", value)?,
                     None => write!(f, "|-")?
