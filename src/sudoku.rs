@@ -25,6 +25,12 @@ impl Sudoku {
         }
         Self { board, rows, cols }
     }
+    pub fn update_value_using_position(&mut self, position: String, value: u8) {
+        self.board.insert(position, Some(value));
+    }
+    pub fn update_value_using_row_col(&mut self, row: char, col: char, value: u8) {
+        self.update_value_using_position(format!("{}{}", row, col), value);
+    }
 }
 
 impl Debug for Sudoku {
@@ -40,12 +46,12 @@ impl Debug for Sudoku {
         // Write the value of all elements in board
         for r in self.rows.iter() {
             // Write each row name
-            write!(f, "|{}",r)?;
+            write!(f, "|{}", r)?;
             for c in self.cols.iter() {
                 // Get value stored in board
                 match self.board.get(&format!("{}{}", r, c)).unwrap() {
                     Some(value) => write!(f, "|{}", value)?,
-                    None => write!(f, "|-")?
+                    None => write!(f, "|-")?,
                 };
             }
             writeln!(f, "|  ")?;
