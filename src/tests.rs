@@ -1,8 +1,8 @@
 #[cfg(test)]
-use crate::sudoku;
-#[test]
-fn solve_sudoku() {
-    let mut sudoku_board = sudoku::Sudoku::new();
+use super::sudoku::Sudoku;
+
+fn generate_boards() -> (Sudoku, Sudoku) {
+    let mut sudoku_board = Sudoku::new();
     sudoku_board.update_value_using_position("a1".to_string(), 8);
     sudoku_board.update_value_using_position("a4".to_string(), 4);
     sudoku_board.update_value_using_position("a6".to_string(), 6);
@@ -30,7 +30,7 @@ fn solve_sudoku() {
     sudoku_board.update_value_using_position("i4".to_string(), 9);
     sudoku_board.update_value_using_position("i6".to_string(), 2);
     sudoku_board.update_value_using_position("i9".to_string(), 5);
-    let mut target_board = sudoku::Sudoku::new();
+    let mut target_board = Sudoku::new();
     // Row "a"
     target_board.update_value_using_position("a1".to_string(), 8);
     target_board.update_value_using_position("a2".to_string(), 3);
@@ -121,6 +121,11 @@ fn solve_sudoku() {
     target_board.update_value_using_position("i7".to_string(), 8);
     target_board.update_value_using_position("i8".to_string(), 1);
     target_board.update_value_using_position("i9".to_string(), 5);
+    (sudoku_board, target_board)
+}
 
-    assert_eq!(target_board, sudoku_board);
+#[test]
+fn solve_sudoku() {
+    let (sample, target) = generate_boards();
+    assert_eq!(sample, target);
 }
