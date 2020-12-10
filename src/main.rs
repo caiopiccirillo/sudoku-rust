@@ -5,6 +5,7 @@ mod reader;
 mod solver;
 mod writer;
 mod sudoku;
+mod tests;
 
 fn main() {
     // Read arguments
@@ -14,8 +15,7 @@ fn main() {
     // Create an instance of reader
     let my_reader= reader::Reader::new(path.into());
     let mut sudoku_board = sudoku::Sudoku::new();
-    sudoku_board.generate_random();
     println!("{:?}",sudoku_board);
-    // my_reader.process_image(&sudoku_board);
+    my_reader.process_image(&sudoku_board);
     println!("{:?}",my_reader.img.dimensions());
 }

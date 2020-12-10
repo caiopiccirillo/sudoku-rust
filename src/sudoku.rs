@@ -1,5 +1,6 @@
 use std::{collections::HashMap, fmt::Debug};
 
+#[derive(PartialEq)]
 pub struct Sudoku {
     pub board: HashMap<String, Option<u8>>,
     rows: Vec<char>,
@@ -28,38 +29,8 @@ impl Sudoku {
     pub fn update_value_using_position(&mut self, position: String, value: u8) {
         self.board.insert(position, Some(value));
     }
-    pub fn update_value_using_row_col(&mut self, row: char, col: char, value: u8) {
+    pub fn _update_value_using_row_col(&mut self, row: char, col: char, value: u8) {
         self.update_value_using_position(format!("{}{}", row, col), value);
-    }
-    // Not generating randomly for now
-    pub fn generate_random(&mut self) {
-        self.update_value_using_position("a1".to_string(), 8);
-        self.update_value_using_position("a4".to_string(), 4);
-        self.update_value_using_position("a6".to_string(), 6);
-        self.update_value_using_position("a9".to_string(), 7);
-        self.update_value_using_position("b7".to_string(), 4);
-        self.update_value_using_position("c2".to_string(), 1);
-        self.update_value_using_position("c7".to_string(), 6);
-        self.update_value_using_position("c8".to_string(), 5);
-        self.update_value_using_position("d1".to_string(), 5);
-        self.update_value_using_position("d3".to_string(), 9);
-        self.update_value_using_position("d5".to_string(), 3);
-        self.update_value_using_position("d7".to_string(), 7);
-        self.update_value_using_position("d8".to_string(), 8);
-        self.update_value_using_position("e5".to_string(), 7);
-        self.update_value_using_position("f2".to_string(), 4);
-        self.update_value_using_position("f3".to_string(), 8);
-        self.update_value_using_position("f5".to_string(), 2);
-        self.update_value_using_position("f7".to_string(), 1);
-        self.update_value_using_position("f9".to_string(), 3);
-        self.update_value_using_position("g2".to_string(), 5);
-        self.update_value_using_position("g3".to_string(), 2);
-        self.update_value_using_position("g8".to_string(), 9);
-        self.update_value_using_position("h3".to_string(), 1);
-        self.update_value_using_position("i1".to_string(), 3);
-        self.update_value_using_position("i4".to_string(), 9);
-        self.update_value_using_position("i6".to_string(), 2);
-        self.update_value_using_position("i9".to_string(), 5);
     }
 }
 
