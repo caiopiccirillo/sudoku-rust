@@ -2,34 +2,34 @@
 use super::sudoku::Sudoku;
 
 fn generate_boards() -> (Sudoku, Sudoku) {
-    let mut sudoku_board = Sudoku::new();
-    sudoku_board.update_value_using_position("a1".to_string(), 8);
-    sudoku_board.update_value_using_position("a4".to_string(), 4);
-    sudoku_board.update_value_using_position("a6".to_string(), 6);
-    sudoku_board.update_value_using_position("a9".to_string(), 7);
-    sudoku_board.update_value_using_position("b7".to_string(), 4);
-    sudoku_board.update_value_using_position("c2".to_string(), 1);
-    sudoku_board.update_value_using_position("c7".to_string(), 6);
-    sudoku_board.update_value_using_position("c8".to_string(), 5);
-    sudoku_board.update_value_using_position("d1".to_string(), 5);
-    sudoku_board.update_value_using_position("d3".to_string(), 9);
-    sudoku_board.update_value_using_position("d5".to_string(), 3);
-    sudoku_board.update_value_using_position("d7".to_string(), 7);
-    sudoku_board.update_value_using_position("d8".to_string(), 8);
-    sudoku_board.update_value_using_position("e5".to_string(), 7);
-    sudoku_board.update_value_using_position("f2".to_string(), 4);
-    sudoku_board.update_value_using_position("f3".to_string(), 8);
-    sudoku_board.update_value_using_position("f5".to_string(), 2);
-    sudoku_board.update_value_using_position("f7".to_string(), 1);
-    sudoku_board.update_value_using_position("f9".to_string(), 3);
-    sudoku_board.update_value_using_position("g2".to_string(), 5);
-    sudoku_board.update_value_using_position("g3".to_string(), 2);
-    sudoku_board.update_value_using_position("g8".to_string(), 9);
-    sudoku_board.update_value_using_position("h3".to_string(), 1);
-    sudoku_board.update_value_using_position("i1".to_string(), 3);
-    sudoku_board.update_value_using_position("i4".to_string(), 9);
-    sudoku_board.update_value_using_position("i6".to_string(), 2);
-    sudoku_board.update_value_using_position("i9".to_string(), 5);
+    let mut sample_board = Sudoku::new();
+    sample_board.update_value_using_position("a1".to_string(), 8);
+    sample_board.update_value_using_position("a4".to_string(), 4);
+    sample_board.update_value_using_position("a6".to_string(), 6);
+    sample_board.update_value_using_position("a9".to_string(), 7);
+    sample_board.update_value_using_position("b7".to_string(), 4);
+    sample_board.update_value_using_position("c2".to_string(), 1);
+    sample_board.update_value_using_position("c7".to_string(), 6);
+    sample_board.update_value_using_position("c8".to_string(), 5);
+    sample_board.update_value_using_position("d1".to_string(), 5);
+    sample_board.update_value_using_position("d3".to_string(), 9);
+    sample_board.update_value_using_position("d5".to_string(), 3);
+    sample_board.update_value_using_position("d7".to_string(), 7);
+    sample_board.update_value_using_position("d8".to_string(), 8);
+    sample_board.update_value_using_position("e5".to_string(), 7);
+    sample_board.update_value_using_position("f2".to_string(), 4);
+    sample_board.update_value_using_position("f3".to_string(), 8);
+    sample_board.update_value_using_position("f5".to_string(), 2);
+    sample_board.update_value_using_position("f7".to_string(), 1);
+    sample_board.update_value_using_position("f9".to_string(), 3);
+    sample_board.update_value_using_position("g2".to_string(), 5);
+    sample_board.update_value_using_position("g3".to_string(), 2);
+    sample_board.update_value_using_position("g8".to_string(), 9);
+    sample_board.update_value_using_position("h3".to_string(), 1);
+    sample_board.update_value_using_position("i1".to_string(), 3);
+    sample_board.update_value_using_position("i4".to_string(), 9);
+    sample_board.update_value_using_position("i6".to_string(), 2);
+    sample_board.update_value_using_position("i9".to_string(), 5);
     let mut target_board = Sudoku::new();
     // Row "a"
     target_board.update_value_using_position("a1".to_string(), 8);
@@ -121,7 +121,7 @@ fn generate_boards() -> (Sudoku, Sudoku) {
     target_board.update_value_using_position("i7".to_string(), 8);
     target_board.update_value_using_position("i8".to_string(), 1);
     target_board.update_value_using_position("i9".to_string(), 5);
-    (sudoku_board, target_board)
+    (sample_board, target_board)
 }
 
 #[test]
