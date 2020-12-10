@@ -1,6 +1,14 @@
+use super::sudoku::*;
 pub struct Solver {
-    pub data: i8,
+    pub data: Sudoku,
 }
 impl Solver {
-    fn read_data() {todo!();}
+    pub fn new(data: Sudoku) -> Self {
+        Self { data }
+    }
+
+    pub fn check_board(&self) -> Result<(), ()> {
+        // self.data.board;
+        return Ok(());
+    }
 }

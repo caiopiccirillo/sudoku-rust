@@ -1,7 +1,7 @@
-pub struct Writer{
-    
-}
+pub struct Writer {}
 
 impl Writer {
-    pub fn new() -> Self { Self {  } }
+    pub fn new() -> Self {
+        Self {}
+    }
 }

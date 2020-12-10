@@ -1,11 +1,11 @@
-use std::env;
 use image::GenericImageView;
+use std::env;
 
 mod reader;
 mod solver;
-mod writer;
 mod sudoku;
 mod tests;
+mod writer;
 
 fn main() {
     // Read arguments
@@ -13,9 +13,9 @@ fn main() {
     // Get image file path
     let path = &args[1];
     // Create an instance of reader
-    let my_reader= reader::Reader::new(path.into());
+    let my_reader = reader::Reader::new(path.into());
     let mut sudoku_board = sudoku::Sudoku::new();
-    println!("{:?}",sudoku_board);
+    println!("{:?}", sudoku_board);
     my_reader.process_image(&sudoku_board);
-    println!("{:?}",my_reader.img.dimensions());
+    println!("{:?}", my_reader.img.dimensions());
 }

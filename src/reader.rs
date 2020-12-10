@@ -1,6 +1,6 @@
+use super::sudoku;
 /// This module will read the image file and extract the information from its file.
 use imageproc::contours::find_contours_with_threshold;
-use super::sudoku;
 pub struct Reader {
     // TODO: img to Some(Box<DynamicImage>)
     pub img: image::DynamicImage,
@@ -20,4 +20,3 @@ impl Reader {
         //println!("{:?}",board);
     }
 }
-
