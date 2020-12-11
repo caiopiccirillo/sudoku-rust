@@ -1,5 +1,4 @@
-#[cfg(test)]
-use super::sudoku::Sudoku;
+use super::{solver::Solver, sudoku::Sudoku};
 
 fn generate_sample() -> Sudoku {
     let mut sample_board = Sudoku::new();
@@ -137,16 +136,18 @@ fn solve_sudoku() {
 }
 
 #[test]
-fn check_board_rows(){
-
+fn check_board_rows() -> Result<(), ()> {
+    let sample = generate_sample();
+    let solver = Solver::new(sample);
+    return solver.check_board();
 }
 
 #[test]
-fn check_board_columns(){
-    
+fn check_board_columns() -> Result<(), ()> {
+    Ok(())
 }
 
 #[test]
-fn check_board_subsquares(){
-    
+fn check_board_subsquares() -> Result<(), ()> {
+    Ok(())
 }

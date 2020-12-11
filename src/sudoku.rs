@@ -3,8 +3,8 @@ use std::{collections::HashMap, fmt::Debug};
 #[derive(PartialEq)]
 pub struct Sudoku {
     pub board: HashMap<String, Option<u8>>,
-    rows: Vec<char>,
-    cols: Vec<char>,
+    pub rows: Vec<char>,
+    pub cols: Vec<char>,
 }
 
 impl Sudoku {

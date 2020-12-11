@@ -4,6 +4,7 @@ use std::env;
 mod reader;
 mod solver;
 mod sudoku;
+#[cfg(test)]
 mod tests;
 mod writer;
 
