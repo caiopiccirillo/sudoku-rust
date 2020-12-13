@@ -136,17 +136,36 @@ fn solve_sudoku() {
 }
 
 #[test]
-fn check_board_rows() -> Result<(), ()> {
+fn check_board_rows_ok() {
     let sample = generate_sample();
     let solver = Solver::new(sample);
-    return solver.check_board();
+    solver.check_board().unwrap();
 }
 
 #[test]
-fn check_board_columns() -> Result<(), ()> {
-    Ok(())
+#[should_panic]
+fn check_board_rows_fail() {
+    let mut sample = generate_sample();
+    sample.update_value_using_position("a2".to_string(), 8);
+    let solver = Solver::new(sample);
+    solver.check_board().unwrap();
 }
 
+#[test]
+fn check_board_columns_ok() {
+    let sample = generate_sample();
+    let solver = Solver::new(sample);
+    solver.check_board().unwrap();
+}
+
+#[test]
+#[should_panic]
+fn check_board_columns_fail() {
+    let mut sample = generate_sample();
+    sample.update_value_using_position("b1".to_string(), 8);
+    let solver = Solver::new(sample);
+    solver.check_board().unwrap();
+}
 #[test]
 fn check_board_subsquares() -> Result<(), ()> {
     Ok(())
