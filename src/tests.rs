@@ -167,6 +167,10 @@ fn check_board_columns_fail() {
     solver.check_board().unwrap();
 }
 #[test]
-fn check_board_subsquares() -> Result<(), ()> {
-    Ok(())
+#[should_panic]
+fn check_board_subsquares_fail() {
+    let mut sample = generate_sample();
+    sample.update_value_using_position("h7".to_string(),5);
+    let solver = Solver::new(sample);
+    solver.check_board().unwrap();
 }
