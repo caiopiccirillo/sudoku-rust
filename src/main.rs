@@ -16,7 +16,8 @@ fn main() {
     // Create an instance of reader
     let my_reader = reader::Reader::new(path.into());
     let mut sudoku_board = sudoku::Sudoku::new();
-    println!("{:?}", sudoku_board);
-    my_reader.process_image(&sudoku_board);
+    let my_solver = solver::Solver::new(sudoku_board);
+    //println!("{:?}", sudoku_board);
+    //my_reader.process_image(&sudoku_board);
     println!("{:?}", my_reader.img.dimensions());
 }

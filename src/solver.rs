@@ -1,11 +1,35 @@
+use std::collections::HashMap;
+
 use super::sudoku::*;
 pub struct Solver {
     pub data: Sudoku,
+    possible_numbers: HashMap<String, Vec<Option<u8>>>,
 }
 
 impl Solver {
     pub fn new(data: Sudoku) -> Self {
-        Self { data }
+        let mut possible_numbers: HashMap<String, Vec<Option<u8>>> = HashMap::new();
+        let rows = (b'a'..=b'i') // Start as u8
+            .map(|c| c as char) // Convert all to chars
+            .filter(|c| c.is_alphabetic()) // Filter only alphabetic chars
+            .collect::<Vec<_>>(); // Collect as Vec<char>
+        let cols = (b'1'..=b'9') // Start as u8
+            .map(|c| c as char) // Convert all to chars
+            .filter(|c| c.is_numeric()) // Filter only numeric chars
+            .collect::<Vec<_>>(); // Collect as Vec<char>
+        let possibilities = (1..=9)
+            .map(|a| (Some(a))) // Convert all to Option
+            .collect::<Vec<Option<u8>>>(); // Collect as Vec<Option<u8>>
+        for r in rows.iter() {
+            for c in cols.iter() {
+                // Insert vector with all possibilities considering blank board
+                possible_numbers.insert(format!("{}{}", r, c), possibilities.clone());
+            }
+        }
+        Self {
+            data,
+            possible_numbers,
+        }
     }
 
     pub fn check_board(&self) -> Result<(), ()> {
