@@ -53,34 +53,48 @@ impl Solver {
             for i in 0..values.len() {
                 for j in 0..values.len() {
                     match values[i] {
-                        Some(v1) => match values[j] {
-                            Some(v2) => {
-                                if v1 == v2 && i != j {
-                                    println!(
-                                        "Error in row: {}, index {} equal to index {}",
-                                        row, indexes[i], indexes[j]
-                                    );
-                                    return Err(());
+                        Some(v1) => {
+                            match self.possible_numbers[&indexes[i]]
+                                .iter()
+                                .position(|i| *i != Some(v1))
+                            {
+                                Some(index) => {
+                                    self.possible_numbers
+                                        .get_mut(&indexes[i])
+                                        .unwrap()
+                                        .remove(index);
                                 }
+                                None => {}
                             }
-                            // When the value is None of values[j], remove the possible number from list
-                            None => {
-                                match self.possible_numbers[&indexes[j]]
-                                    .iter()
-                                    .position(|i| *i == Some(v1))
-                                {
-                                    Some(index) => {
-                                        self.possible_numbers
-                                            .get_mut(&indexes[j])
-                                            .unwrap()
-                                            .remove(index);
-                                    }
-                                    None => {
-                                        continue;
+                            match values[j] {
+                                Some(v2) => {
+                                    if v1 == v2 && i != j {
+                                        println!(
+                                            "Error in row: {}, index {} equal to index {}",
+                                            row, indexes[i], indexes[j]
+                                        );
+                                        return Err(());
                                     }
                                 }
+                                // When the value is None of values[j], remove the possible number from list
+                                None => {
+                                    match self.possible_numbers[&indexes[j]]
+                                        .iter()
+                                        .position(|i| *i == Some(v1))
+                                    {
+                                        Some(index) => {
+                                            self.possible_numbers
+                                                .get_mut(&indexes[j])
+                                                .unwrap()
+                                                .remove(index);
+                                        }
+                                        None => {
+                                            continue;
+                                        }
+                                    }
+                                }
                             }
-                        },
+                        }
                         None => {
                             continue;
                         }
@@ -107,35 +121,49 @@ impl Solver {
             for i in 0..values.len() {
                 for j in 0..values.len() {
                     match values[i] {
-                        Some(v1) => match values[j] {
-                            Some(v2) => {
-                                if v1 == v2 && i != j {
-                                    println!(
-                                        "Error in col: {}, index {} equal to index {}",
-                                        col, indexes[i], indexes[j]
-                                    );
-                                    return Err(());
+                        Some(v1) => {
+                            match self.possible_numbers[&indexes[i]]
+                                .iter()
+                                .position(|i| *i != Some(v1))
+                            {
+                                Some(index) => {
+                                    self.possible_numbers
+                                        .get_mut(&indexes[i])
+                                        .unwrap()
+                                        .remove(index);
                                 }
+                                None => {}
                             }
-                            // When the value is None of values[j], remove the possible number from list
-                            None => {
-                                match self.possible_numbers[&indexes[j]]
-                                    .iter()
-                                    .position(|i| *i == Some(v1))
-                                {
-                                    Some(index) => {
-                                        self.possible_numbers
-                                            .get_mut(&indexes[j])
-                                            .unwrap()
-                                            .remove(index);
-                                    }
-                                    None => {
-                                        continue;
+                            match values[j] {
+                                Some(v2) => {
+                                    if v1 == v2 && i != j {
+                                        println!(
+                                            "Error in col: {}, index {} equal to index {}",
+                                            col, indexes[i], indexes[j]
+                                        );
+                                        return Err(());
                                     }
                                 }
-                                // println!("{:?}", self.possible_numbers[&indexes[j]]);
+                                // When the value is None of values[j], remove the possible number from list
+                                None => {
+                                    match self.possible_numbers[&indexes[j]]
+                                        .iter()
+                                        .position(|i| *i == Some(v1))
+                                    {
+                                        Some(index) => {
+                                            self.possible_numbers
+                                                .get_mut(&indexes[j])
+                                                .unwrap()
+                                                .remove(index);
+                                        }
+                                        None => {
+                                            continue;
+                                        }
+                                    }
+                                    // println!("{:?}", self.possible_numbers[&indexes[j]]);
+                                }
                             }
-                        },
+                        }
                         None => {
                             continue;
                         }
@@ -264,15 +292,12 @@ impl Solver {
                             || *i == self.possible_numbers[&first_twin_index][1]
                     }) {
                         Some(i) => {
-                            self.possible_numbers
-                                .get_mut(&index)
-                                .unwrap()
-                                .remove(i);
-                                // println!(
-                                //     "Removing {} {:?}",
-                                //     index,
-                                //     self.possible_numbers[&index]
-                                // );
+                            self.possible_numbers.get_mut(&index).unwrap().remove(i);
+                            // println!(
+                            //     "Removing {} {:?}",
+                            //     index,
+                            //     self.possible_numbers[&index]
+                            // );
                         }
                         None => {
                             continue;
@@ -308,12 +333,17 @@ impl Solver {
         }
         for row in self.data.rows.clone() {
             for col in self.data.cols.clone() {
-                println!("{}{} {:?}",row,col,self.possible_numbers[&format!("{}{}", row, col)]);
+                println!(
+                    "{}{} {:?}",
+                    row,
+                    col,
+                    self.possible_numbers[&format!("{}{}", row, col)]
+                );
             }
         }
         if start.elapsed().as_millis() >= 100 {
             println!("Time elapsed in solve_board() is: {:?}", start.elapsed());
-            println!("{:?}",self.data);
+            println!("{:?}", self.data);
             return Err("Timeout error");
         }
         Ok(self.data.clone())
