@@ -15,12 +15,12 @@ fn main() {
     let path = &args[1];
     // Create an instance of reader
     let my_reader = reader::Reader::new(path.into());
-    let mut sudoku_board = sudoku::Sudoku::new();
+    let sudoku_board = sudoku::Sudoku::new();
     println!("{:?}", sudoku_board);
     let mut my_solver = solver::Solver::new(sudoku_board);
     let solved_board = my_solver.solve_board();
     println!("{:?}", solved_board);
-    //println!("{:?}", sudoku_board);
+    let _my_writer = writer::Writer::new();
     //my_reader.process_image(&sudoku_board);
     println!("{:?}", my_reader.img.dimensions());
 }

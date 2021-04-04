@@ -37,7 +37,7 @@ impl Sudoku {
         for r in self.rows.iter() {
             for c in self.cols.iter() {
                 match self.board[&format!("{}{}", &r, &c)] {
-                    Some(value) => {
+                    Some(_value) => {
                         continue;
                     }
                     None => {
