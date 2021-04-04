@@ -101,6 +101,7 @@ impl Solver {
                     }
                 }
             }
+            self.unique_possibility(&mut indexes).unwrap();
             self.naked_twin_strategy(&mut indexes).unwrap();
             // Clearing the values to a new row
             values.clear();
@@ -170,6 +171,7 @@ impl Solver {
                     }
                 }
             }
+            self.unique_possibility(&mut indexes).unwrap();
             self.naked_twin_strategy(&mut indexes).unwrap();
             // Clearing the values to a new col
             values.clear();
@@ -243,6 +245,7 @@ impl Solver {
                         }
                     }
                 }
+                self.unique_possibility(&mut indexes).unwrap();
                 self.naked_twin_strategy(&mut indexes).unwrap();
                 values.clear();
                 indexes.clear();
@@ -251,6 +254,48 @@ impl Solver {
             }
             col_offset = 0;
             row_offset += 3;
+        }
+        Ok(())
+    }
+
+    fn unique_possibility(&mut self, list_index_by_group: &mut Vec<String>) -> Result<(), ()> {
+        if list_index_by_group.len() == 0 {
+            return Err(());
+        }
+        for index1 in list_index_by_group.clone() {
+            if self.possible_numbers[&index1].len() >= 2 {
+                for value1 in self.possible_numbers[&index1].clone() {
+                    let mut unique = true;
+                    for index2 in list_index_by_group.clone() {
+                        if index1 != index2 {
+                            for value2 in self.possible_numbers[&index2].clone() {
+                                if value1.unwrap() == value2.unwrap() {
+                                    unique = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if unique {
+                        println!(
+                            "Found unique: {} {:?}",
+                            index1, self.possible_numbers[&index1]
+                        );
+                        match self.possible_numbers[&index1]
+                            .iter()
+                            .position(|i| *i != value1)
+                        {
+                            Some(index) => {
+                                self.possible_numbers
+                                    .get_mut(&index1)
+                                    .unwrap()
+                                    .remove(index);
+                            }
+                            None => {}
+                        }
+                    }
+                }
+            }
         }
         Ok(())
     }
@@ -311,6 +356,7 @@ impl Solver {
 
     pub fn solve_board(&mut self) -> Result<Sudoku, &str> {
         let start = Instant::now();
+        let mut epoch = 1;
         loop {
             self.check_board().unwrap();
             for row in self.data.rows.clone() {
@@ -330,6 +376,8 @@ impl Solver {
             if start.elapsed().as_millis() >= 100 {
                 break;
             }
+            println!("{}", epoch);
+            epoch += 1;
         }
         for row in self.data.rows.clone() {
             for col in self.data.cols.clone() {
