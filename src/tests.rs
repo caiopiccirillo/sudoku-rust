@@ -266,21 +266,18 @@ fn generate_target_easy() -> Sudoku {
 #[test]
 fn solve_sudoku_easy() {
     let sample = generate_sample_easy();
-    println!("{:?}", sample);
     let target = generate_target_easy();
     let mut solver = Solver::new(sample);
-    let solved_board = solver.solve_board();
+    let solved_board = solver.solve_board().unwrap();
     assert_eq!(solved_board, target);
 }
 
 #[test]
-#[ignore]
 fn solve_sudoku_hard() {
     let sample = generate_sample_hard();
-    println!("{:?}", sample);
     let target = generate_target_hard();
     let mut solver = Solver::new(sample);
-    let solved_board = solver.solve_board();
+    let solved_board = solver.solve_board().unwrap();
     assert_eq!(solved_board, target);
 }
 

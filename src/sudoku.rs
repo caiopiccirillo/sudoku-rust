@@ -46,7 +46,6 @@ impl Sudoku {
                 }
             }
         }
-        println!("{}", num_empty_fields);
         num_empty_fields
     }
 }

@@ -18,7 +18,7 @@ fn main() {
     let sudoku_board = sudoku::Sudoku::new();
     println!("{:?}", sudoku_board);
     let mut my_solver = solver::Solver::new(sudoku_board);
-    let solved_board = my_solver.solve_board();
+    let solved_board = my_solver.solve_board().unwrap();
     println!("{:?}", solved_board);
     let _my_writer = writer::Writer::new();
     //my_reader.process_image(&sudoku_board);

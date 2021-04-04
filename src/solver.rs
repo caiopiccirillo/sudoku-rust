@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::time::Instant;
 
 use super::sudoku::*;
 #[derive(Debug)]
@@ -86,6 +87,7 @@ impl Solver {
                     }
                 }
             }
+            self.naked_twin_strategy(&mut indexes).unwrap();
             // Clearing the values to a new row
             values.clear();
             indexes.clear();
@@ -140,6 +142,7 @@ impl Solver {
                     }
                 }
             }
+            self.naked_twin_strategy(&mut indexes).unwrap();
             // Clearing the values to a new col
             values.clear();
             indexes.clear();
@@ -212,6 +215,7 @@ impl Solver {
                         }
                     }
                 }
+                self.naked_twin_strategy(&mut indexes).unwrap();
                 values.clear();
                 indexes.clear();
                 subsquare += 1;
@@ -223,8 +227,66 @@ impl Solver {
         Ok(())
     }
 
-    pub fn solve_board(&mut self) -> Sudoku {
-        for _ in 0..81 {
+    fn naked_twin_strategy(&mut self, list_index_by_group: &mut Vec<String>) -> Result<(), ()> {
+        if list_index_by_group.len() == 0 {
+            return Err(());
+        }
+        let mut first_twin_index = String::new();
+        let mut second_twin_index = String::new();
+        for index1 in 0..list_index_by_group.len() {
+            if self.possible_numbers[&list_index_by_group[index1]].len() == 2 {
+                for index2 in index1..list_index_by_group.len() {
+                    if self.possible_numbers[&list_index_by_group[index2]].len() == 2
+                        && self.possible_numbers[&list_index_by_group[index1]]
+                            == self.possible_numbers[&list_index_by_group[index2]]
+                        && index1 != index2
+                    {
+                        if first_twin_index.is_empty() && second_twin_index.is_empty() {
+                            first_twin_index = list_index_by_group[index1].clone();
+                            second_twin_index = list_index_by_group[index2].clone();
+                        }
+                        // println!(
+                        //     "Found {} {:?} equal to {} {:?}",
+                        //     list_index_by_group[index1],
+                        //     self.possible_numbers[&list_index_by_group[index1]],
+                        //     list_index_by_group[index2],
+                        //     self.possible_numbers[&list_index_by_group[index2]]
+                        // );
+                    }
+                }
+            }
+        }
+        if !first_twin_index.is_empty() && !second_twin_index.is_empty() {
+            for index in list_index_by_group.clone() {
+                if index != first_twin_index && index != second_twin_index {
+                    match self.possible_numbers[&index].iter().position(|i| {
+                        *i == self.possible_numbers[&first_twin_index][0]
+                            || *i == self.possible_numbers[&first_twin_index][1]
+                    }) {
+                        Some(i) => {
+                            self.possible_numbers
+                                .get_mut(&index)
+                                .unwrap()
+                                .remove(i);
+                                // println!(
+                                //     "Removing {} {:?}",
+                                //     index,
+                                //     self.possible_numbers[&index]
+                                // );
+                        }
+                        None => {
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    pub fn solve_board(&mut self) -> Result<Sudoku, &str> {
+        let start = Instant::now();
+        loop {
             self.check_board().unwrap();
             for row in self.data.rows.clone() {
                 for col in self.data.cols.clone() {
@@ -236,16 +298,24 @@ impl Solver {
                     }
                 }
             }
-            println!("{}", self.data.num_empty_fields());
+            // println!("{}", self.data.num_empty_fields());
             if self.data.num_empty_fields() == 0 {
+                break;
+            }
+            if start.elapsed().as_millis() >= 100 {
                 break;
             }
         }
         for row in self.data.rows.clone() {
             for col in self.data.cols.clone() {
-                println!("{}{}{:?}",row,col,self.possible_numbers[&format!("{}{}", row, col)]);
+                println!("{}{} {:?}",row,col,self.possible_numbers[&format!("{}{}", row, col)]);
             }
         }
-        self.data.clone()
+        if start.elapsed().as_millis() >= 100 {
+            println!("Time elapsed in solve_board() is: {:?}", start.elapsed());
+            println!("{:?}",self.data);
+            return Err("Timeout error");
+        }
+        Ok(self.data.clone())
     }
 }
