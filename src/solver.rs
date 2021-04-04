@@ -236,9 +236,14 @@ impl Solver {
                     }
                 }
             }
-            println!("{}",self.data.num_empty_fields());
+            println!("{}", self.data.num_empty_fields());
             if self.data.num_empty_fields() == 0 {
                 break;
+            }
+        }
+        for row in self.data.rows.clone() {
+            for col in self.data.cols.clone() {
+                println!("{}{}{:?}",row,col,self.possible_numbers[&format!("{}{}", row, col)]);
             }
         }
         self.data.clone()
