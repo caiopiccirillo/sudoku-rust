@@ -128,17 +128,19 @@ fn generate_target() -> Sudoku {
 }
 
 #[test]
-#[ignore] //for now
 fn solve_sudoku() {
     let sample = generate_sample();
+    println!("{:?}", sample);
     let target = generate_target();
-    assert_eq!(sample, target);
+    let mut solver = Solver::new(sample);
+    let solved_board = solver.solve_board();
+    assert_eq!(solved_board, target);
 }
 
 #[test]
 fn check_board_rows_ok() {
     let sample = generate_sample();
-    let solver = Solver::new(sample);
+    let mut solver = Solver::new(sample);
     solver.check_board().unwrap();
 }
 
@@ -147,14 +149,14 @@ fn check_board_rows_ok() {
 fn check_board_rows_fail() {
     let mut sample = generate_sample();
     sample.update_value_using_position("a2".to_string(), 8);
-    let solver = Solver::new(sample);
+    let mut solver = Solver::new(sample);
     solver.check_board().unwrap();
 }
 
 #[test]
 fn check_board_columns_ok() {
     let sample = generate_sample();
-    let solver = Solver::new(sample);
+    let mut solver = Solver::new(sample);
     solver.check_board().unwrap();
 }
 
@@ -163,7 +165,7 @@ fn check_board_columns_ok() {
 fn check_board_columns_fail() {
     let mut sample = generate_sample();
     sample.update_value_using_position("b1".to_string(), 8);
-    let solver = Solver::new(sample);
+    let mut solver = Solver::new(sample);
     solver.check_board().unwrap();
 }
 #[test]
@@ -171,6 +173,6 @@ fn check_board_columns_fail() {
 fn check_board_subsquares_fail() {
     let mut sample = generate_sample();
     sample.update_value_using_position("h7".to_string(), 5);
-    let solver = Solver::new(sample);
+    let mut solver = Solver::new(sample);
     solver.check_board().unwrap();
 }

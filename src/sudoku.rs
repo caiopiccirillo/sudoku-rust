@@ -1,6 +1,6 @@
 use std::{collections::HashMap, fmt::Debug};
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub struct Sudoku {
     pub board: HashMap<String, Option<u8>>,
     pub rows: Vec<char>,
@@ -31,6 +31,23 @@ impl Sudoku {
     }
     pub fn _update_value_using_row_col(&mut self, row: char, col: char, value: u8) {
         self.update_value_using_position(format!("{}{}", row, col), value);
+    }
+    pub fn num_empty_fields(&mut self) -> u8 {
+        let mut num_empty_fields: u8 = 0;
+        for r in self.rows.iter() {
+            for c in self.cols.iter() {
+                match self.board[&format!("{}{}", &r, &c)] {
+                    Some(value) => {
+                        continue;
+                    }
+                    None => {
+                        num_empty_fields += 1;
+                    }
+                }
+            }
+        }
+        println!("{}", num_empty_fields);
+        num_empty_fields
     }
 }
 
