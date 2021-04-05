@@ -6,6 +6,7 @@ use super::sudoku::*;
 pub struct Solver {
     pub data: Sudoku,
     possible_numbers: HashMap<String, Vec<Option<u8>>>,
+    instant: Instant,
 }
 
 impl Solver {
@@ -28,9 +29,11 @@ impl Solver {
                 possible_numbers.insert(format!("{}{}", r, c), possibilities.clone());
             }
         }
+        let instant = Instant::now();
         Self {
             data,
             possible_numbers,
+            instant,
         }
     }
 
@@ -354,14 +357,25 @@ impl Solver {
         Ok(())
     }
 
-    pub fn solve_board(&mut self) -> Result<Sudoku, Sudoku> {
-        let start = Instant::now();
+    pub fn solve_board(&mut self) -> Result<Sudoku, &str> {
+        if self.instant.elapsed().as_millis() >= 100 {
+            // println!(
+            //     "Time elapsed in solve_board() is: {:?}",
+            //     self.instant.elapsed()
+            // );
+            return Err("Timeout error");
+        }
         let mut previous_num_empty_fields = self.data.num_empty_fields();
+        if previous_num_empty_fields == 81 {
+            return Err("Empty sudoku board");
+        }
         let mut epoch = 1;
         loop {
-            match self.check_board(){
+            match self.check_board() {
                 Ok(_) => {}
-                Err(_) => {return Err(self.data.clone());}
+                Err(_) => {
+                    return Err("Checking board error");
+                }
             }
             for row in self.data.rows.clone() {
                 for col in self.data.cols.clone() {
@@ -400,7 +414,8 @@ impl Solver {
                                 if self.possible_numbers[&format!("{}{}", row, col)].len() == 2 {
                                     self.data.update_value_using_position(
                                         format!("{}{}", row, col),
-                                        self.possible_numbers[&format!("{}{}", row, col)][1].unwrap(),
+                                        self.possible_numbers[&format!("{}{}", row, col)][1]
+                                            .unwrap(),
                                     );
                                     // println!("Trying {}{}",row,col);
                                     break 'outer_;
@@ -410,31 +425,22 @@ impl Solver {
                     }
                 }
             }
-            // println!("{}", self.data.num_empty_fields());
             if self.data.num_empty_fields() == 0 {
                 break;
             }
-            if start.elapsed().as_millis() >= 100 {
+            if self.instant.elapsed().as_millis() >= 100 {
                 break;
             }
             println!("Epoch {}", epoch);
             epoch += 1;
             previous_num_empty_fields = self.data.num_empty_fields();
         }
-        for row in self.data.rows.clone() {
-            for col in self.data.cols.clone() {
-                println!(
-                    "{}{} {:?}",
-                    row,
-                    col,
-                    self.possible_numbers[&format!("{}{}", row, col)]
-                );
-            }
-        }
-        if start.elapsed().as_millis() >= 100 {
-            println!("Time elapsed in solve_board() is: {:?}", start.elapsed());
-            // println!("{:?}", self.data);
-            return Err(self.data.clone());
+        if self.instant.elapsed().as_millis() >= 100 {
+            // println!(
+            //     "Time elapsed in solve_board() is: {:?}",
+            //     self.instant.elapsed()
+            // );
+            return Err("Timeout error");
         }
         Ok(self.data.clone())
     }

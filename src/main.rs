@@ -16,11 +16,17 @@ fn main() {
     // Create an instance of reader
     let my_reader = reader::Reader::new(path.into());
     let sudoku_board = sudoku::Sudoku::new();
-    println!("{:?}", sudoku_board);
+    println!("Sudoku board: {:?}", sudoku_board);
     let mut my_solver = solver::Solver::new(sudoku_board);
-    let solved_board = my_solver.solve_board().unwrap();
-    println!("{:?}", solved_board);
-    let _my_writer = writer::Writer::new();
-    //my_reader.process_image(&sudoku_board);
-    println!("{:?}", my_reader.img.dimensions());
+    let result = my_solver.solve_board();
+    match result {
+        Ok(solved_board) => {
+            println!("Solved board: {:?}", solved_board);
+            let _my_writer = writer::Writer::new();
+        }
+        Err(err) => {
+            println!("Error while solving board: {:?}", err);
+        }
+    }
+    println!("Image dimensions: {:?}", my_reader.img.dimensions());
 }
