@@ -277,10 +277,10 @@ impl Solver {
                         }
                     }
                     if unique {
-                        println!(
-                            "Found unique: {} {:?}",
-                            index1, self.possible_numbers[&index1]
-                        );
+                        // println!(
+                        //     "Found unique: {} {:?}",
+                        //     index1, self.possible_numbers[&index1]
+                        // );
                         match self.possible_numbers[&index1]
                             .iter()
                             .position(|i| *i != value1)
@@ -354,11 +354,15 @@ impl Solver {
         Ok(())
     }
 
-    pub fn solve_board(&mut self) -> Result<Sudoku, &str> {
+    pub fn solve_board(&mut self) -> Result<Sudoku, Sudoku> {
         let start = Instant::now();
+        let mut previous_num_empty_fields = self.data.num_empty_fields();
         let mut epoch = 1;
         loop {
-            self.check_board().unwrap();
+            match self.check_board(){
+                Ok(_) => {}
+                Err(_) => {return Err(self.data.clone());}
+            }
             for row in self.data.rows.clone() {
                 for col in self.data.cols.clone() {
                     if self.possible_numbers[&format!("{}{}", row, col)].len() == 1 {
@@ -369,6 +373,47 @@ impl Solver {
                     }
                 }
             }
+            if previous_num_empty_fields == self.data.num_empty_fields() {
+                let mut index = String::new();
+                let data_clone = self.data.clone();
+                let possible_numbers_clone = self.possible_numbers.clone();
+                'outer: for row in self.data.rows.clone() {
+                    for col in self.data.cols.clone() {
+                        if self.possible_numbers[&format!("{}{}", row, col)].len() == 2 {
+                            self.data.update_value_using_position(
+                                format!("{}{}", row, col),
+                                self.possible_numbers[&format!("{}{}", row, col)][0].unwrap(),
+                            );
+                            if index.is_empty() {
+                                index = format!("{}{}", row, col);
+                            }
+                            // println!("Trying {}{}",row,col);
+                            break 'outer;
+                        }
+                    }
+                }
+                match self.solve_board() {
+                    Ok(board) => {
+                        return Ok(board);
+                    }
+                    Err(_) => {
+                        self.possible_numbers = possible_numbers_clone;
+                        self.data = data_clone;
+                        'outer_: for row in self.data.rows.clone() {
+                            for col in self.data.cols.clone() {
+                                if self.possible_numbers[&format!("{}{}", row, col)].len() == 2 {
+                                    self.data.update_value_using_position(
+                                        format!("{}{}", row, col),
+                                        self.possible_numbers[&format!("{}{}", row, col)][1].unwrap(),
+                                    );
+                                    // println!("Trying {}{}",row,col);
+                                    break 'outer_;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             // println!("{}", self.data.num_empty_fields());
             if self.data.num_empty_fields() == 0 {
                 break;
@@ -376,8 +421,9 @@ impl Solver {
             if start.elapsed().as_millis() >= 100 {
                 break;
             }
-            println!("{}", epoch);
+            println!("Epoch {}", epoch);
             epoch += 1;
+            previous_num_empty_fields = self.data.num_empty_fields();
         }
         for row in self.data.rows.clone() {
             for col in self.data.cols.clone() {
@@ -391,8 +437,8 @@ impl Solver {
         }
         if start.elapsed().as_millis() >= 100 {
             println!("Time elapsed in solve_board() is: {:?}", start.elapsed());
-            println!("{:?}", self.data);
-            return Err("Timeout error");
+            // println!("{:?}", self.data);
+            return Err(self.data.clone());
         }
         Ok(self.data.clone())
     }
