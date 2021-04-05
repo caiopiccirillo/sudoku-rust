@@ -374,7 +374,6 @@ impl Solver {
                 }
             }
             if previous_num_empty_fields == self.data.num_empty_fields() {
-                let mut index = String::new();
                 let data_clone = self.data.clone();
                 let possible_numbers_clone = self.possible_numbers.clone();
                 'outer: for row in self.data.rows.clone() {
@@ -384,9 +383,6 @@ impl Solver {
                                 format!("{}{}", row, col),
                                 self.possible_numbers[&format!("{}{}", row, col)][0].unwrap(),
                             );
-                            if index.is_empty() {
-                                index = format!("{}{}", row, col);
-                            }
                             // println!("Trying {}{}",row,col);
                             break 'outer;
                         }
