@@ -869,7 +869,7 @@ mod tests {
     fn check_board_rows_ok() {
         let sample = generate_sample_hard();
         let mut solver = Solver::new(sample);
-        solver.check_board().unwrap();
+        solver.check_rows().unwrap();
     }
 
     #[test]
@@ -878,14 +878,14 @@ mod tests {
         let mut sample = generate_sample_hard();
         sample.update_value_using_position("a2".to_string(), 8);
         let mut solver = Solver::new(sample);
-        solver.check_board().unwrap();
+        solver.check_rows().unwrap();
     }
 
     #[test]
     fn check_board_columns_ok() {
         let sample = generate_sample_hard();
         let mut solver = Solver::new(sample);
-        solver.check_board().unwrap();
+        solver.check_cols().unwrap();
     }
 
     #[test]
@@ -894,7 +894,7 @@ mod tests {
         let mut sample = generate_sample_hard();
         sample.update_value_using_position("b1".to_string(), 8);
         let mut solver = Solver::new(sample);
-        solver.check_board().unwrap();
+        solver.check_cols().unwrap();
     }
     #[test]
     #[should_panic]
@@ -902,6 +902,6 @@ mod tests {
         let mut sample = generate_sample_hard();
         sample.update_value_using_position("h7".to_string(), 5);
         let mut solver = Solver::new(sample);
-        solver.check_board().unwrap();
+        solver.check_subsquares().unwrap();
     }
 }
