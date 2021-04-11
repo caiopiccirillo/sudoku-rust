@@ -2,6 +2,9 @@ use std::collections::HashMap;
 use std::time::Instant;
 
 use super::sudoku::*;
+
+const TIMEOUT: u128 = 150;
+
 #[derive(Debug)]
 pub struct Solver {
     pub data: Sudoku,
@@ -358,7 +361,7 @@ impl Solver {
     }
 
     pub fn solve_board(&mut self) -> Result<Sudoku, &str> {
-        if self.instant.elapsed().as_millis() >= 100 {
+        if self.instant.elapsed().as_millis() >= TIMEOUT {
             // println!(
             //     "Time elapsed in solve_board() is: {:?}",
             //     self.instant.elapsed()
@@ -428,14 +431,14 @@ impl Solver {
             if self.data.num_empty_fields() == 0 {
                 break;
             }
-            if self.instant.elapsed().as_millis() >= 100 {
+            if self.instant.elapsed().as_millis() >= TIMEOUT {
                 break;
             }
             println!("Epoch {}", epoch);
             epoch += 1;
             previous_num_empty_fields = self.data.num_empty_fields();
         }
-        if self.instant.elapsed().as_millis() >= 100 {
+        if self.instant.elapsed().as_millis() >= TIMEOUT {
             // println!(
             //     "Time elapsed in solve_board() is: {:?}",
             //     self.instant.elapsed()
