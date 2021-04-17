@@ -1,5 +1,6 @@
 use super::sudoku::*;
 use image::*;
+use imageproc::contours::*;
 /// This module will read the image file and extract the information from its file.
 // use imageproc::contours::find_contours_with_threshold;
 pub struct Reader {
@@ -18,7 +19,8 @@ impl Reader {
     pub fn process_image(&mut self) -> Sudoku {
         println!("Image dimensions: {:?}", self.img.dimensions());
         let gray_img = self.img.grayscale();
-        println!("Grayscale image dimensions: {:?}", gray_img.dimensions());
+        let contours = find_contours_with_threshold::<i32>(&gray_img.into_luma8(),127);
+        println!("Number of contours: {}", contours.len());
         self.board.clone()
     }
 }
