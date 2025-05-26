@@ -9,11 +9,40 @@ pub struct Reader {
     board: Sudoku,
 }
 
+// Define a custom error type for the reader module
+#[derive(Debug)]
+pub enum ReaderError {
+    ImageOpenError(image::ImageError),
+    // Add other potential error types here if needed
+}
+
+impl std::fmt::Display for ReaderError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            ReaderError::ImageOpenError(e) => write!(f, "Failed to open image: {}", e),
+        }
+    }
+}
+
+impl std::error::Error for ReaderError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            ReaderError::ImageOpenError(e) => Some(e),
+        }
+    }
+}
+
 impl Reader {
-    pub fn new(path: String) -> Self {
-        Self {
-            img: image::open(path).unwrap(),
-            board: Sudoku::new(),
+    pub fn new(path: String) -> Result<Self, ReaderError> {
+        match image::open(&path) {
+            Ok(img_dyn) => Ok(Self {
+                img: img_dyn,
+                board: Sudoku::new(),
+            }),
+            Err(e) => {
+                eprintln!("Error opening image file at path '{}': {}", path, e);
+                Err(ReaderError::ImageOpenError(e))
+            }
         }
     }
     pub fn process_image(&mut self) -> Sudoku {
@@ -54,7 +83,7 @@ mod tests {
         sample_board.update_value_using_position("i3".to_string(), 4);
         sample_board.update_value_using_position("i4".to_string(), 2);
         sample_board.update_value_using_position("i9".to_string(), 8);
-        return sample_board;
+        sample_board
     }
 
     fn generate_sample_hard() -> Sudoku {
@@ -86,7 +115,7 @@ mod tests {
         sample_board.update_value_using_position("i4".to_string(), 9);
         sample_board.update_value_using_position("i6".to_string(), 2);
         sample_board.update_value_using_position("i9".to_string(), 5);
-        return sample_board;
+        sample_board
     }
 
     fn generate_sample_easy() -> Sudoku {
@@ -127,13 +156,13 @@ mod tests {
         sample_board.update_value_using_position("i6".to_string(), 5);
         sample_board.update_value_using_position("i7".to_string(), 1);
         sample_board.update_value_using_position("i9".to_string(), 7);
-        return sample_board;
+        sample_board
     }
 
     #[test]
     fn read_image_sudoku_easy() {
         let sample = generate_sample_easy();
-        let mut reader = Reader::new("assets/sample_easy.jpg".to_string());
+        let mut reader = Reader::new("assets/sample_easy.jpg".to_string()).expect("Failed to create Reader for easy test");
         let result = reader.process_image();
         assert_eq!(sample, result);
     }
@@ -141,7 +170,7 @@ mod tests {
     #[test]
     fn read_image_sudoku_hard() {
         let sample = generate_sample_hard();
-        let mut reader = Reader::new("assets/sample_hard.png".to_string());
+        let mut reader = Reader::new("assets/sample_hard.png".to_string()).expect("Failed to create Reader for hard test");
         let result = reader.process_image();
         assert_eq!(sample, result);
     }
@@ -149,8 +178,18 @@ mod tests {
     #[test]
     fn read_image_sudoku_very_hard() {
         let sample = generate_sample_very_hard();
-        let mut reader = Reader::new("assets/sample_very_hard.png".to_string());
+        let mut reader = Reader::new("assets/sample_very_hard.png".to_string()).expect("Failed to create Reader for very_hard test");
         let result = reader.process_image();
         assert_eq!(sample, result);
+    }
+
+    #[test]
+    fn reader_new_file_not_found() {
+        let result = Reader::new("non_existent_file.png".to_string());
+        assert!(result.is_err());
+        match result.err().unwrap() {
+            ReaderError::ImageOpenError(_) => { /* Expected error */ }
+            // Add other ReaderError variants here if they become possible
+        }
     }
 }

@@ -11,7 +11,13 @@ fn main() {
     // Get image file path
     let path = &args[1];
     // Create an instance of reader
-    let mut my_reader = reader::Reader::new(path.into());
+    let mut my_reader = match reader::Reader::new(path.into()) {
+        Ok(r) => r,
+        Err(e) => {
+            eprintln!("Failed to initialize Sudoku reader: {}", e);
+            std::process::exit(1);
+        }
+    };
     let sudoku_board = my_reader.process_image();
     println!("Sudoku board: {:?}", sudoku_board);
     let mut my_solver = solver::Solver::new(sudoku_board);

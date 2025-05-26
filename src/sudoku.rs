@@ -73,6 +73,6 @@ impl Debug for Sudoku {
             }
             writeln!(f, "|  ")?;
         }
-        return result;
+        result
     }
 }
